@@ -4,7 +4,7 @@
 #include <cstring>
 #include <iostream>
 
-#include "thirdparty/miniz.h"
+#include "miniz.h"
 
 using namespace std::string_literals;
 

@@ -1,0 +1,28 @@
+package:
+  name: "d5lidar"
+  version: "0.0.1"
+
+source:
+  path: ..
+
+build:
+  number: 0
+  script: "{{PYTHON}} setup.py install"
+
+requirements:
+  build:
+    - python
+    - pybind11
+    - setuptools
+
+  run:
+    - python
+    - numpy
+
+about:
+  home: https://github.com/mgradysaunders/d5lidar
+  license: BSD
+  license_family: BSD
+  summary:
+
+

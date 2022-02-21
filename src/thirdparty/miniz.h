@@ -1,3 +1,5 @@
+#define MINIZ_NO_ARCHIVE_APIS 1
+#define MINIZ_NO_STDIO 1
 #define MINIZ_EXPORT
 /* miniz.c 2.2.0 - public domain deflate/inflate, zlib-subset, ZIP reading/writing/appending, PNG writing
    See "unlicense" statement at the end of this file.
