@@ -128,6 +128,12 @@ struct PulseView {
     waveformArray.clear();
     return *this;
   }
+  int64_t size() const {
+    int64_t xSize = binFile->fileHeader.xDetectorCount;
+    int64_t ySize = binFile->fileHeader.yDetectorCount;
+    int64_t sSize = pulseHeader.samplesPerTimeBin;
+    return xSize * ySize * sSize;
+  }
   EigenVectorView waveformView(int x, int y, int sampleIndex = 0) {
     if (x < 0 or y < 0 or  //
         x >= int(binFile->fileHeader.xDetectorCount) or
@@ -291,7 +297,7 @@ struct WaveformView {
   struct Sentinel {};
   bool operator==(Sentinel) const noexcept { return done; }
   bool operator!=(Sentinel) const noexcept { return not done; }
-  WaveformView operator*() { return *this; }
+  WaveformView& operator*() { return *this; }
   WaveformView& operator++() {
     xIndex++;
     if (xIndex >= pulse->binFile->fileHeader.xDetectorCount) {
@@ -503,6 +509,7 @@ PYBIND11_MODULE(d5lidar, module) {
           "The line-of-sight ray direction as a function of pixel X and Y "
           "indexes.")
       .def("__str__", &PulseView::printString)
+      .def("__len__", &PulseView::size)
       .def(
           "__iter__",
           [](PulseView& self) {
@@ -516,7 +523,8 @@ PYBIND11_MODULE(d5lidar, module) {
           [](PulseView& self, int index) {
             WaveformView from = WaveformView(&self, 0, 0, 0);
             WaveformView::Sentinel to;
-            while (index-- > 0) {
+            while (index > 0) {
+              --index;
               ++from;
               if (from == to) throw std::invalid_argument("Index out of range");
             }
