@@ -515,7 +515,7 @@ PYBIND11_MODULE(d5lidar, module) {
           [](PulseView& self) {
             WaveformView from = WaveformView(&self, 0, 0, 0);
             WaveformView::Sentinel to;
-            return py::make_iterator(from, to);
+            return py::make_iterator(from, to, py::return_value_policy::copy);
           },
           py::keep_alive<0, 1>())
       .def(
@@ -573,7 +573,8 @@ PYBIND11_MODULE(d5lidar, module) {
           "__iter__",
           [](WaveformView& self) {
             return py::make_iterator(
-                self.waveform.begin(), self.waveform.end());
+                self.waveform.begin(), self.waveform.end(),
+                py::return_value_policy::copy);
           })
       .def_property_readonly("array", [](py::object obj) {
         auto& self = obj.cast<WaveformView&>();
