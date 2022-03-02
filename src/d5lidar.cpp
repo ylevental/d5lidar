@@ -291,7 +291,7 @@ struct WaveformView {
   struct Sentinel {};
   bool operator==(Sentinel) const noexcept { return done; }
   bool operator!=(Sentinel) const noexcept { return not done; }
-  WaveformView& operator*() { return *this; }
+  WaveformView operator*() { return *this; }
   WaveformView& operator++() {
     xIndex++;
     if (xIndex >= pulse->binFile->fileHeader.xDetectorCount) {
@@ -509,6 +509,18 @@ PYBIND11_MODULE(d5lidar, module) {
             WaveformView from = WaveformView(&self, 0, 0, 0);
             WaveformView::Sentinel to;
             return py::make_iterator(from, to);
+          },
+          py::keep_alive<0, 1>())
+      .def(
+          "__getitem__",
+          [](PulseView& self, int index) {
+            WaveformView from = WaveformView(&self, 0, 0, 0);
+            WaveformView::Sentinel to;
+            while (index-- > 0) {
+              ++from;
+              if (from == to) throw std::invalid_argument("Index out of range");
+            }
+            return from;
           },
           py::keep_alive<0, 1>());
 
