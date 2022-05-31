@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Saunders
+    given-names: M. Grady
+title: "d5lidar Module"
+date-released: 2022-04-04
+url: "https://github.com/mgradysaunders/d5lidar"
